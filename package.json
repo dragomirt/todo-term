@@ -1,0 +1,19 @@
+{
+  "name": "todo-term",
+  "version": "1.0.0",
+  "description": "A CLI To-Do list",
+  "main": "index.js",
+  "scripts": {
+    "test": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dragomirt/todo-term.git"
+  },
+  "author": "Dragomir Turcanu",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dragomirt/todo-term/issues"
+  },
+  "homepage": "https://github.com/dragomirt/todo-term#readme"
+}
