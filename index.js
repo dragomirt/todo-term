@@ -1,4 +1,4 @@
-const signale = require('signale');
+const {	Signale	} = require('signale');
 const chalk = require('chalk');
 const figlet = require('figlet');
 const clear = require('clear');
@@ -6,6 +6,20 @@ const inquirer = require('inquirer');
 const fs = require('fs');
 const clui = require('clui');
 let appConfig;
+
+// Custom Signale
+const signaleCustomOptions = {
+	scope: 'custom',
+	types: {
+		bye: {
+		badge: '👋',
+		color: 'yellow',
+		label: '	bye'
+		}
+	}
+};
+const customSignale = new Signale(signaleCustomOptions);
+const signale = new Signale(); // Default values
 
 clear();
 function printHeader(){
@@ -136,11 +150,20 @@ function printToDo(fileName){
 			message: 'Tasks',
 			choices: options,
 			pageSize: 15,
+			filter: function(val){
+				return options.indexOf(val);
+			}
 		}
 	];
-	inquirer.registerPrompt('useTask', require('inquirer-select-line'));
 	inquirer.prompt(qst).then(answ=>{
-		console.log(`asdf`);
+		if(answ.useTask === options.length-1){
+			clear();
+			customSignale.bye();
+			process.exit();
+		}else if(answ.useTask > 3){
+			switchStat(answ.useTask, fileName);
+		}
+		console.log(answ);
 	});
 }
 
