@@ -81,7 +81,25 @@ function askDetails(){
 		inquirer.prompt(qst).then(answ=> {
 			if(answ.openFileName){
 				let taskData = require(`${appConfig.listsPath}${answ.openFileName}`);
-				
+				let tasks = [];
+				taskData.tasks.forEach(task => {
+					let tsk;
+					if(task.stat === 'p'){
+						tsk = signale.pending(task.msg);
+					}else if(task.stat === 'c'){
+						tsk = signale.complete(task.msg)
+					}
+					tasks.push(tsk);
+				})
+				var qst = [
+					{
+						type: 'list',
+						name: 'openFileName',
+						message: 'Which file would you like to open',
+						choices: tasks,
+					}
+				];
+				inquirer.prompt(qst).then(answ => {console.log(answ)});
 			}
 		});
 	});
