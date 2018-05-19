@@ -179,4 +179,15 @@ function switchStat(task_id, fileName){
 	printToDo(fileName);
 }
 
+function checkAvailability(newMsg, fileName){
+	let file = require(`${appConfig.listsPath}${fileName}`);
+	file.tasks.forEach(task =>{
+		if(task.msg === newMsg){
+			return false;
+		}
+	})
+
+	return true;
+}
+
 askDetails();
