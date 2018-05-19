@@ -39,29 +39,26 @@ try{
 	});
 }
 
-initReadme();
+if(!appConfig.defaultPath || !appConfig.listsPath || !appConfig.listsType){
+	initDefaultConfig();
+}
+initFolder();
 
 // Initiate config JSON if it's empty
 function initDefaultConfig(){
-	if(appConfig === undefined){
-		appConfig.defaultPath = "./";
-		appConfig.listsPath = "./lists/";
-		appConfig.listsType = "json"
-		fs.writeFileSync('./config.json', JSON.stringify(appConfig))
-		signale.debug('Default Config Applied');
-	}
+	appConfig.defaultPath = "./";
+	appConfig.listsPath = "./lists/";
+	appConfig.listsType = "json"
+	fs.writeFileSync('./config.json', JSON.stringify(appConfig))
+	signale.debug('Default Config Applied');
 }
 
 // Init lists folder
-function initReadme(){
+function initFolder(){
 	try{
 		check = fs.readdirSync(`${appConfig.listsPath}`);
 	}catch(err){
-		signale.fatal(new Error(err));
-		fs.writeFile(`${appConfig.listsPath}readme.json`, `{}` , function(err){
-			if(err) signale.fatal(`\n${err}`);
-			signale.debug('Created tasks directory')
-		});
+		fs.mkdirSync(appConfig.listsPath);
 	}
 }
 
@@ -197,7 +194,7 @@ function printToDo(fileName){
 				{
 					type: 'input',
 					name: 'msg',
-					message: `Task's name`,
+					message: `Task's name: `,
 				  },
 			]
 			inquirer.prompt(qst).then(answ => {
@@ -268,7 +265,7 @@ function deleteTask(fileName){
 		{
 			type: 'list',
 			name: 'elId',
-			message: 'Delete Task',
+			message: 'Delete Task: ',
 			choices: options,
 			pageSize: 10,
 			filter: function(val){
