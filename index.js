@@ -131,15 +131,15 @@ function printToDo(fileName){
 	clear();
 
 	// Get The contents of the file
-	let data = getTasksFromFile(fileName);
+	var data = getTasksFromFile(fileName);
 
 	// Header
 	var Progress = clui.Progress;
-	let thisProgressBar = new Progress(20);
+	var thisProgressBar = new Progress(20);
 	console.log(chalk.cyan.underline(fileName)); // Print File Name
 	console.log(`\n${thisProgressBar.update(data.p / (data.p + data.c))}\n`);
 
-	let options = [`Create a Task`, 'Delete a Task', 'Help', 'Close', new inquirer.Separator()];
+	var options = [`Create a Task`, 'Delete a Task', 'Help', 'Close', new inquirer.Separator()];
 	options.push(data.tasks);
 	options.push([new inquirer.Separator(), chalk.red('Exit')]);
 	options = [].concat(...options); // To 1D array
@@ -181,6 +181,9 @@ function printToDo(fileName){
 			printHeader();
 			askDetails();
 		}
+		else if(answ.useTask === 1){
+			deleteTask(fileName);
+		}
 	});
 }
 
@@ -214,6 +217,47 @@ function addTask(newMsg, fileName){
 		if(err) signale.fatal(err);
 	});
 	printToDo(fileName);
+}
+
+function deleteTask(fileName){
+	clear();
+
+	// Get The contents of the file
+	let data = getTasksFromFile(fileName);
+	let options = [];
+
+	// Header
+	console.log(chalk.cyan.underline(fileName)); // Print File Name
+	console.log(chalk.red.bold('Delete Task: '));
+
+	options.push(data.tasks);
+	options.push([new inquirer.Separator(), chalk.red('Close')]);
+	options = [].concat(...options); // To 1D array
+	var qst = [
+		{
+			type: 'list',
+			name: 'elId',
+			message: 'Delete Task',
+			choices: options,
+			pageSize: 10,
+			filter: function(val){
+				return options.indexOf(val);
+			}
+		}
+	];
+	inquirer.prompt(qst).then(answ=>{
+		console.log(answ);
+		if (answ.elId < options.length-2){
+			let file = require(`${appConfig.listsPath}${fileName}`);
+			file.tasks.splice(answ.elId, 1);
+			
+			fs.writeFile(`${appConfig.listsPath}${fileName}`, JSON.stringify(file), function(err){
+				if(err) signale.fatal(err);
+				clear();
+				printToDo(fileName);
+			});
+		}
+	});
 }
 
 askDetails();
