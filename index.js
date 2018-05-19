@@ -162,6 +162,24 @@ function printToDo(fileName){
 			process.exit();
 		}else if(answ.useTask > 3){
 			switchStat(answ.useTask-5, fileName);
+		}else if(answ.useTask === 0){
+			qst = [
+				{
+					type: 'input',
+					name: 'msg',
+					message: `Task's name`,
+				  },
+			]
+			inquirer.prompt(qst).then(answ => {
+				if(checkAvailability(answ.msg, fileName)){
+					addTask(answ.msg, fileName)
+				}
+			});
+		}
+		else if(answ.useTask === 3){
+			clear();
+			printHeader();
+			askDetails();
 		}
 	});
 }
@@ -186,8 +204,16 @@ function checkAvailability(newMsg, fileName){
 			return false;
 		}
 	})
-
 	return true;
+}
+
+function addTask(newMsg, fileName){
+	let file = require(`${appConfig.listsPath}${fileName}`);
+	file.tasks.push({"stat":"p","msg":`${newMsg}`})
+	fs.writeFile(`${appConfig.listsPath}${fileName}`, JSON.stringify(file), function(err){
+		if(err) signale.fatal(err);
+	});
+	printToDo(fileName);
 }
 
 askDetails();
