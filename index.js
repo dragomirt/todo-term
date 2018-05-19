@@ -11,16 +11,19 @@ try{
 	fs.writeFile('config.json', `{}`, function(error){
 		if(error) throw error;
 		appConfig = require('./config.json');
+		initDefaultConfig();
 		console.log('Hi!')
 	});
 }
 
 // Initiate config JSON if it's empty
-if(appConfig.defaultPath === undefined){
-	appConfig.defaultPath = "./";
-	appConfig.listsPath = "./lists";
-	appConfig.listsType = "json"
-	fs.writeFileSync('./config.json', JSON.stringify(appConfig))
+function initDefaultConfig(){
+	if(appConfig === undefined){
+		appConfig.defaultPath = "./";
+		appConfig.listsPath = "./lists";
+		appConfig.listsType = "json"
+		fs.writeFileSync('./config.json', JSON.stringify(appConfig))
+	}
 }
 
 clear();
