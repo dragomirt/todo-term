@@ -334,12 +334,12 @@ function deleteFile(fileName){
 		  },
 	]
 	inquirer.prompt(qst).then(answ => {
-		if(answ.res){
+		if(answ.res === 'yes'){
 			fs.unlink(appConfig.listsPath + fileName, (err)=>{
 				if(err) throw err;
 				toMenu();
 			});
-		}else{
+		}else if(answ.res === 'no'){
 			toMenu();
 		}
 	});
