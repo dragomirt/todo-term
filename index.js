@@ -137,7 +137,7 @@ function printToDo(fileName){
 	var Progress = clui.Progress;
 	var thisProgressBar = new Progress(20);
 	console.log(chalk.cyan.underline(fileName)); // Print File Name
-	console.log(`\n${thisProgressBar.update(data.p / (data.p + data.c))}\n`);
+	console.log(`\n${thisProgressBar.update(data.c / (data.p + data.c))}\n`);
 
 	var options = [`Create a Task`, 'Delete a Task', 'Help', 'Close', new inquirer.Separator()];
 	options.push(data.tasks);
@@ -203,7 +203,8 @@ function switchStat(task_id, fileName){
 function checkAvailability(newMsg, fileName){
 	let file = require(`${appConfig.listsPath}${fileName}`);
 	file.tasks.forEach(task =>{
-		if(task.msg === newMsg){
+		console.log(`${task.msg } ${newMsg}`);
+		if(task.msg == newMsg){
 			return false;
 		}
 	})
