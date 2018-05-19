@@ -72,7 +72,7 @@ function askDetails(){
 		{
 		  type: 'list',
 		  name: 'taskFileOperation',
-		  message: 'What would you like to do with a task list file',
+		  message: 'What would you like to do with a task list file: ',
 		  choices: ['open', 'create', 'delete'],
 		  filter: function(val) {
 			return val.toLowerCase();
@@ -86,7 +86,7 @@ function askDetails(){
 				{
 					type: 'list',
 					name: 'openFileName',
-					message: 'Which file would you like to open',
+					message: 'Which file would you like to open: ',
 					choices: getTskFileList(),
 					filter: function(val) {
 					return val.toLowerCase();
@@ -94,14 +94,44 @@ function askDetails(){
 				}
 			];
 		}else if(answers.taskFileOperation === 'create'){
-
+			qst = [
+				{
+					type: 'list',
+					name: 'ext',
+					message: `Extension: `,
+					choices: ['json', 'csv'],
+				  },
+			]
 		}else if(answers.taskFileOperation === 'delete'){
-
+			var qst = [
+				{
+					type: 'list',
+					name: 'deleteFile',
+					message: 'Which file would you like to delete?: ',
+					choices: getTskFileList(),
+					filter: function(val) {
+						return val.toLowerCase();
+					}
+				}
+			];
 		}
 
 		inquirer.prompt(qst).then(answ=> {
 			if(answ.openFileName){
 				printToDo(answ.openFileName);
+			}else if(answ.ext){
+				qst = [
+					{
+						type: 'input',
+						name: 'fname',
+						message: `File name: `,
+					  },
+				]
+				inquirer.prompt(qst).then(answ1 => {
+					addFile(`${answ1.fname}.${answ.ext}`);
+				});
+			}else if(answ.deleteFile){
+				deleteFile(answ.deleteFile);
 			}
 		});
 	});
@@ -137,7 +167,7 @@ function printToDo(fileName){
 	var Progress = clui.Progress;
 	var thisProgressBar = new Progress(20);
 	console.log(chalk.cyan.underline(fileName)); // Print File Name
-	console.log(`\n${thisProgressBar.update(data.p / (data.p + data.c))}\n`);
+	console.log(`\n${thisProgressBar.update(data.c / (data.p + data.c))}\n`);
 
 	var options = [`Create a Task`, 'Delete a Task', 'Help', 'Close', new inquirer.Separator()];
 	options.push(data.tasks);
@@ -171,9 +201,7 @@ function printToDo(fileName){
 				  },
 			]
 			inquirer.prompt(qst).then(answ => {
-				if(checkAvailability(answ.msg, fileName)){
-					addTask(answ.msg, fileName)
-				}
+				addTask(answ.msg, fileName);
 			});
 		}
 		else if(answ.useTask === 3){
@@ -202,20 +230,23 @@ function switchStat(task_id, fileName){
 
 function checkAvailability(newMsg, fileName){
 	let file = require(`${appConfig.listsPath}${fileName}`);
+	var check = true;
 	file.tasks.forEach(task =>{
-		if(task.msg === newMsg){
-			return false;
+		if(task.msg == newMsg){
+			check = false;
 		}
 	})
-	return true;
+	return check;
 }
 
 function addTask(newMsg, fileName){
 	let file = require(`${appConfig.listsPath}${fileName}`);
-	file.tasks.push({"stat":"p","msg":`${newMsg}`})
-	fs.writeFile(`${appConfig.listsPath}${fileName}`, JSON.stringify(file), function(err){
-		if(err) signale.fatal(err);
-	});
+	if(checkAvailability(newMsg, fileName)){
+		file.tasks.push({"stat":"p","msg":`${newMsg}`})
+		fs.writeFile(`${appConfig.listsPath}${fileName}`, JSON.stringify(file), function(err){
+			if(err) signale.fatal(err);
+		});
+	}
 	printToDo(fileName);
 }
 
@@ -256,6 +287,60 @@ function deleteTask(fileName){
 				clear();
 				printToDo(fileName);
 			});
+		}
+	});
+}
+
+function toMenu(){
+	clear();
+	printHeader();
+	askDetails();
+}
+
+function addFile(fileName){
+	if(!fs.existsSync(appConfig.listsPath+fileName)){
+		fs.writeFile(appConfig.listsPath+fileName, `{"tasks":[]}`, function(err){
+			if(err) signale.fatal(err);
+		});
+		clear();
+		printHeader();
+		signale.success(`${fileName} was successfully created`);
+		askDetails();
+	}else{
+		signale.fatal('This list already exists.')
+		Spinner = clui.Spinner;
+		var countdown = new Spinner('Exiting in 3 seconds...  ', ['⣾','⣽','⣻','⢿','⡿','⣟','⣯','⣷']);
+		countdown.start();
+		var number = 3;
+			setInterval(function () {
+			number--;
+			countdown.message('Exiting in ' + number + ' seconds...  ');
+			if (number === 0) {
+				countdown.stop();
+				clear();
+				toMenu();
+			}
+		}, 1000);
+	}
+}
+
+function deleteFile(fileName){
+	qst = [
+		{
+			type: 'list',
+			name: 'res',
+			message: `Do you want to delete ${fileName}?: `,
+			choices: ['no', 'yes']
+		  },
+	]
+	inquirer.prompt(qst).then(answ => {
+		if(answ.res === 'yes'){
+			fs.unlink(appConfig.listsPath + fileName, (err)=>{
+				if(err) throw err;
+				toMenu();
+			});
+		}else if(answ.res === 'no'){
+			toMenu();
 		}
 	});
 }
