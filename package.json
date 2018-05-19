@@ -15,5 +15,14 @@
   "bugs": {
     "url": "https://github.com/dragomirt/todo-term/issues"
   },
-  "homepage": "https://github.com/dragomirt/todo-term#readme"
+  "homepage": "https://github.com/dragomirt/todo-term#readme",
+  "dependencies": {
+    "chalk": "^2.4.1",
+    "clear": "^0.1.0",
+    "clui": "^0.3.6",
+    "configstore": "^3.1.2",
+    "figlet": "^1.2.0",
+    "inquirer": "^5.2.0",
+    "minimist": "^1.2.0"
+  }
 }
