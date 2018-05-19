@@ -161,14 +161,22 @@ function printToDo(fileName){
 			customSignale.bye();
 			process.exit();
 		}else if(answ.useTask > 3){
-			switchStat(answ.useTask, fileName);
+			switchStat(answ.useTask-5, fileName);
 		}
-		console.log(answ);
 	});
 }
 
 function switchStat(task_id, fileName){
-
+	let file = require(`${appConfig.listsPath}${fileName}`);
+	let prevStat = file.tasks[task_id].stat;
+	let newStat;
+	if(prevStat === 'c'){newStat = 'p'}
+	else if(prevStat === 'p'){ newStat = 'c'}
+	file.tasks[task_id].stat = newStat;
+	fs.writeFile(`${appConfig.listsPath}${fileName}`, JSON.stringify(file), function(err){
+		if(err) signale.fatal(err);
+	});
+	printToDo(fileName);
 }
 
 askDetails();
