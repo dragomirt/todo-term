@@ -6,7 +6,7 @@ A CLI To-Do list
 * Create a new list
 * Delete a list
 
-![alt text](https://github.com/dragomirt/todo-term/public/images/menu.png "Main Menu")
+![alt text](https://raw.githubusercontent.com/dragomirt/todo-term/master/public/images/menu.png "Main Menu")
 
 ### To-Do page has all the common task manipulation
 
@@ -14,7 +14,7 @@ A CLI To-Do list
 * Delete a task
 * Mark as Complete / Pending
 
-![alt text](https://github.com/dragomirt/todo-term/public/images/tasks.png "To-Do page")
+![alt text](https://raw.githubusercontent.com/dragomirt/todo-term/master/public/images/tasks.png "To-Do page")
 
 
 ### To use it just do the following
