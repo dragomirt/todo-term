@@ -1,6 +1,14 @@
 # todo-term
 A CLI To-Do list
 
+```
+git clone https://github.com/dragomirt/todo-term/
+cd todo-term
+npm i
+npm start
+```
+### Enjoy! 🎉
+
 ### Straightforward interface which encapsulates 3 main functions:
 * Open an existiing list
 * Create a new list
@@ -15,15 +23,3 @@ A CLI To-Do list
 * Mark as Complete / Pending
 
 ![alt text](https://raw.githubusercontent.com/dragomirt/todo-term/master/public/images/tasks.png "To-Do page")
-
-
-### To use it just do the following
-
-```
-git clone https://github.com/dragomirt/todo-term/
-cd todo-term
-npm i
-npm start
-```
-
-### Enjoy! 🎉
