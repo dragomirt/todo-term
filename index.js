@@ -30,13 +30,11 @@ function printHeader(){
 printHeader();
 	
 try{
-	appConfig = require('./config.json');
+	appConfig = require(`${process.cwd()}/config.json`);
 }catch(err){
-	fs.writeFile('config.json', `{}`, function(error){
-		if(error) throw error;
-		appConfig = require('./config.json');
-		initDefaultConfig();
-	});
+	fs.writeFileSync(`${process.cwd()}/config.json`, `{}`);
+	appConfig = require(`${process.cwd()}/config.json`);
+	initDefaultConfig();
 }
 
 if(!appConfig.defaultPath || !appConfig.listsPath || !appConfig.listsType){
@@ -46,10 +44,10 @@ initFolder();
 
 // Initiate config JSON if it's empty
 function initDefaultConfig(){
-	appConfig.defaultPath = "./";
-	appConfig.listsPath = "./lists/";
+	appConfig.defaultPath = `${process.cwd()}/`;
+	appConfig.listsPath = `${process.cwd()}/lists/`;
 	appConfig.listsType = "json"
-	fs.writeFileSync('./config.json', JSON.stringify(appConfig))
+	fs.writeFileSync(`${process.cwd()}/config.json`, JSON.stringify(appConfig))
 	signale.debug('Default Config Applied');
 }
 
