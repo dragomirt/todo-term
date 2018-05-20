@@ -1,13 +1,13 @@
 # todo-term
 A CLI To-Do list
 
+### Install
 ```
 git clone https://github.com/dragomirt/todo-term/
 cd todo-term
 npm i
 npm start
 ```
-### Enjoy! 🎉
 
 ### Straightforward interface which encapsulates 3 main functions:
 * Open an existiing list
@@ -23,3 +23,5 @@ npm start
 * Mark as Complete / Pending
 
 ![alt text](https://raw.githubusercontent.com/dragomirt/todo-term/master/public/images/tasks.png "To-Do page")
+
+### Enjoy! 🎉
