@@ -32,11 +32,9 @@ printHeader();
 try{
 	appConfig = require('./config.json');
 }catch(err){
-	fs.writeFile('config.json', `{}`, function(error){
-		if(error) throw error;
-		appConfig = require('./config.json');
-		initDefaultConfig();
-	});
+	fs.writeFileSync('config.json', `{}`);
+	appConfig = require('./config.json');
+	initDefaultConfig();
 }
 
 if(!appConfig.defaultPath || !appConfig.listsPath || !appConfig.listsType){
